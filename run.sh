@@ -1,6 +1,4 @@
 #!/bin/bash
 
-target=thumbv7em-none-eabihf
-
-echo -ne "Building $target...\n\n"
-cargo build --target $target
+cargo bootimage
+qemu-system-x86_64 -drive format=raw,file=target/x86_64-rust-os/debug/bootimage-rust-kernel.bin
