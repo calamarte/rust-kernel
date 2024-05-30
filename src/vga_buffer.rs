@@ -3,7 +3,6 @@ use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::Volatile;
 
-
 #[macro_export]
 macro_rules! print {
     ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
@@ -141,5 +140,28 @@ struct ColorCode(u8);
 impl ColorCode {
     fn new(fg: Color, bg: Color) -> ColorCode {
         ColorCode((bg as u8) << 4 | (fg as u8))
+    }
+}
+
+#[test_case]
+fn test_println() {
+    println!("Testing sentence");
+}
+
+#[test_case]
+fn test_println() {
+    for _ in 1..=100 {
+        println!("Testing sentence");
+    }
+}
+
+#[test_case]
+fn test_check_output() {
+    let val = "This is a simple line of text to test VGA output";
+    println!("{}", val);
+
+    for (i, char) in val.chars().enumerate() {
+        let screen_char = WRITER.lock().buffer.chars[BUFF_HEIGHT - 2][i].read().ascii_char;
+        assert_eq!(char::from(screen_char), char);
     }
 }

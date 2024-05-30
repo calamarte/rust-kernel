@@ -5,31 +5,21 @@
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-
-mod serial;
-mod vga_buffer;
+use rust_kernel::println;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("Pepinillo");
-    println!("fuck");
-
-    #[cfg(test)]
     test_main();
 
     loop {}
 }
 
-#[cfg(not(test))]
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    println!("{}", _info);
-    loop {}
-}
-
-#[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    rust_kernel::test_panic_handler(info);
+    rust_kernel::test_panic_handler(info)
 }
 
+#[test_case]
+fn test_println() {
+    println!("Check printin marcro");
+}
