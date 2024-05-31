@@ -14,7 +14,7 @@ This is kernel wrote from scratch base on [Philipp Oppermann's blog](https://os.
 2. [x] A Minimal Rust Kernel
 3. [x] VGA Text Mode
 4. [x] Testing
-5. [ ] CPU Exceptions
+5. [x] CPU Exceptions
 6. [ ] Double Faults
 7. [ ] Hardware Interrupts
 8. [ ] Introduction to Paging

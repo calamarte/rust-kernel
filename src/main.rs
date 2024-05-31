@@ -11,11 +11,16 @@ mod vga_buffer;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("Pepinillo");
-    println!("fuck");
+    println!("Init...");
+
+    rust_kernel::init();
+
+    x86_64::instructions::interrupts::int3();
 
     #[cfg(test)]
     test_main();
+    
+    println!("Finish!");
 
     loop {}
 }
