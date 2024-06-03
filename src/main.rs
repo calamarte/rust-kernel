@@ -20,14 +20,14 @@ pub extern "C" fn _start() -> ! {
 
     println!("Finish!");
 
-    loop {}
+    rust_kernel::htl_loop();
 }
 
 #[cfg(not(test))]
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    println!("{}", _info);
-    loop {}
+fn panic(info: &PanicInfo) -> ! {
+    println!("{}", info);
+    rust_kernel::htl_loop();
 }
 
 #[cfg(test)]

@@ -16,7 +16,7 @@ This is kernel wrote from scratch base on [Philipp Oppermann's blog](https://os.
 4. [x] Testing
 5. [x] CPU Exceptions
 6. [x] Double Faults
-7. [ ] Hardware Interrupts
+7. [x] Hardware Interrupts
 8. [ ] Introduction to Paging
 9. [ ] Paging Implementation
 10. [ ] Heap Allocation

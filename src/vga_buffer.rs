@@ -50,7 +50,11 @@ lazy_static! {
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
-    WRITER.lock().write_fmt(args).unwrap();
+    use x86_64::instructions::interrupts;
+
+    interrupts::without_interrupts(|| {
+        WRITER.lock().write_fmt(args).unwrap();
+    });
 }
 
 pub struct Writer {
@@ -156,12 +160,23 @@ fn test_println() {
 }
 
 #[test_case]
-fn test_check_output() {
-    let val = "This is a simple line of text to test VGA output";
-    println!("{}", val);
+fn test_println_output() {
+    use core::fmt::Write;
+    use x86_64::instructions::interrupts;
 
-    for (i, char) in val.chars().enumerate() {
-        let screen_char = WRITER.lock().buffer.chars[BUFF_HEIGHT - 2][i].read().ascii_char;
-        assert_eq!(char::from(screen_char), char);
-    }
+    let val = "This is hallowen";
+
+    interrupts::without_interrupts(|| {
+        for (i, char) in val.chars().enumerate() {
+            let mut writer = WRITER.lock();
+            writeln!(writer, "\n{}", val).expect("writeln failed");
+
+
+            let screen_char = writer.buffer.chars[BUFF_HEIGHT - 2][i]
+                .read()
+                .ascii_char;
+
+            assert_eq!(char::from(screen_char), char);
+        }
+    });
 }
