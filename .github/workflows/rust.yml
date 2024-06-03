@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Setup Rust Nightly
+      run: sudo rustup toolchain install nightly && sudo rustup default nightly
     - name: Install QEMU
       run: |
         sudo apt update && sudo apt install -y qemu
