@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Install Rust Nightly
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        override: true
+        default: true
+
+    - name: Install bootimage
+      run: cargo install bootimage --debug
+    
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rustup Components
+      run: rustup component add rust-src llvm-tools-preview
+    
+    - name: Run `Cargo bootimage`
+      uses: actions-rs/cargo@v1
+      with:
+        command: bootimage
+
+
+    - name: Install QEMU
+      run: sudo apt update && sudo apt install -y qemu-system-x86
+
+    - name: QEMU Version
+      run: qemu-system-x86_64 --version
+
+    - name: Testing
+      uses: actions-rs/cargo@v1
+      with:
+        command: test
+    
+
