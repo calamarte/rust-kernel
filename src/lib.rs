@@ -10,10 +10,18 @@ use core::panic::PanicInfo;
 use x86_64::instructions;
 use x86_64::instructions::port::Port;
 
+#[cfg(test)]
+use bootloader::{entry_point, BootInfo};
+
 pub mod gdt;
 pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
+pub mod memory;
+
+
+#[cfg(test)]
+entry_point!(lib_main);
 
 pub fn init() {
     gdt::init();
@@ -77,7 +85,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 
 #[cfg(test)]
 #[no_mangle]
-pub extern "C" fn _start() -> ! {
+fn lib_main(_: &'static BootInfo) -> ! {
     init();
     test_main();
 

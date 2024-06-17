@@ -18,7 +18,7 @@ This is kernel wrote from scratch base on [Philipp Oppermann's blog](https://os.
 6. [x] Double Faults
 7. [x] Hardware Interrupts
 8. [x] Introduction to Paging
-9. [ ] Paging Implementation
+9. [x] Paging Implementation
 10. [ ] Heap Allocation
 11. [ ] Allocator Designs
 12. [ ] Async/Await
