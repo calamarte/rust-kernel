@@ -4,9 +4,12 @@
 #![test_runner(rust_kernel::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+extern crate alloc;
+
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
-use rust_kernel::memory;
+use alloc::boxed::Box;
+use rust_kernel::{allocator, memory};
 
 mod serial;
 mod vga_buffer;
@@ -15,7 +18,7 @@ entry_point!(main);
 
 fn main(boot_info: &'static BootInfo) -> ! {
     use rust_kernel::memory::BootInfoFrameAllocator;
-    use x86_64::{structures::paging::Page, VirtAddr};
+    use x86_64::VirtAddr;
 
     println!("Init...");
 
@@ -25,13 +28,11 @@ fn main(boot_info: &'static BootInfo) -> ! {
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
     let mut frame_alloc = unsafe { BootInfoFrameAllocator::init(&boot_info.memory_map) };
 
-    let page = Page::containing_address(VirtAddr::new(0));
-    memory::create_example_mapping(page, &mut mapper, &mut frame_alloc);
+    allocator::init_heap(&mut mapper, &mut frame_alloc)
+        .expect("Heap initialization failed!");
 
-    let page_ptr: *mut u64 = page.start_address().as_mut_ptr();
-    unsafe {
-        page_ptr.offset(400).write_volatile(0x_f021_f077_f065_f04e);
-    };
+    let x = Box::new(22);
+    println!("heap value {:p}", x);
 
     #[cfg(test)]
     test_main();
