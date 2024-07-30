@@ -1,4 +1,3 @@
-
 ## Rust-kernel 🥑
 
 This is kernel wrote from scratch base on [Philipp Oppermann's blog](https://os.phil-opp.com/)
@@ -20,6 +19,5 @@ This is kernel wrote from scratch base on [Philipp Oppermann's blog](https://os.
 8. [x] Introduction to Paging
 9. [x] Paging Implementation
 10. [x] Heap Allocation
-11. [ ] Allocator Designs
+11. [x] Allocator Designs
 12. [ ] Async/Await
-
