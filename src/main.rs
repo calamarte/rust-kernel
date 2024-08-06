@@ -8,11 +8,22 @@ extern crate alloc;
 
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
-use alloc::boxed::Box;
-use rust_kernel::{allocator, memory};
+use rust_kernel::{
+    allocator, memory,
+    task::{executor::Executor, keyboard, Task},
+};
 
 mod serial;
 mod vga_buffer;
+
+async fn ansync_number() -> u32 {
+    27
+}
+
+async fn example_task() {
+    let number = ansync_number().await;
+    println!("async number: {number}");
+}
 
 entry_point!(main);
 
@@ -28,18 +39,15 @@ fn main(boot_info: &'static BootInfo) -> ! {
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
     let mut frame_alloc = unsafe { BootInfoFrameAllocator::init(&boot_info.memory_map) };
 
-    allocator::init_heap(&mut mapper, &mut frame_alloc)
-        .expect("Heap initialization failed!");
-
-    let x = Box::new(22);
-    println!("heap value {:p}", x);
+    allocator::init_heap(&mut mapper, &mut frame_alloc).expect("Heap initialization failed!");
 
     #[cfg(test)]
     test_main();
 
-    println!("Finish!");
-
-    rust_kernel::htl_loop();
+    let mut executor = Executor::new();
+    executor.spawn(Task::new(example_task()));
+    executor.spawn(Task::new(keyboard::print_keypresses()));
+    executor.run();
 }
 
 #[cfg(not(test))]
