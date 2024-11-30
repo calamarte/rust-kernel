@@ -1,6 +1,6 @@
 ## Rust-kernel 🥑
 
-This is kernel wrote from scratch base on [Philipp Oppermann's blog](https://os.phil-opp.com/)
+This is a kernel wrote from scratch based on [Philipp Oppermann's blog](https://os.phil-opp.com/)
 
 ## Requirements
 
